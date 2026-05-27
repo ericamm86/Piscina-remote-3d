@@ -4,7 +4,7 @@
 
 - Busca de endereco
 - Geocodificacao
-- Mapa satelite ou demo GIS
+- Mapa satelite ou base GIS local
 - Upload de imagem real do quintal ou drone
 - Posicionamento manual da piscina com drag, resize e rotacao
 - Renderizacao 3D simples

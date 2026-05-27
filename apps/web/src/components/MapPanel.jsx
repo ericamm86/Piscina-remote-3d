@@ -16,7 +16,9 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
     width: poolConfig.footprint?.width || 190,
     height: poolConfig.footprint?.height || 108
   }));
-  const formattedAddress = geocode?.formattedAddress?.replace("visualizacao demonstrativa", t.demoVisualization);
+  const formattedAddress = geocode?.formattedAddress
+    ?.replace("visualizacao demonstrativa", t.gisBase)
+    ?.replace("base cartografica", t.gisBase);
 
   useEffect(() => {
     if (!siteImage || !realMapRef.current) return;

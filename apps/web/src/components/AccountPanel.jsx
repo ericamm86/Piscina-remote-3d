@@ -14,14 +14,14 @@ export function AccountPanel({
 }) {
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({
-    name: "Cliente Demo",
-    email: "cliente@demo.com",
-    password: "demo123"
+    name: "",
+    email: "",
+    password: ""
   });
 
   function submit(event) {
     event.preventDefault();
-    if (mode === "login") onLogin({ email: form.email, password: form.password });
+    if (mode === "login") onLogin({ name: form.name, email: form.email, password: form.password });
     else onRegister(form);
   }
 
@@ -91,19 +91,18 @@ export function AccountPanel({
             </button>
           </div>
 
-          {mode === "register" && (
-            <label>
-              {t.name}
-              <input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
-            </label>
-          )}
+          <label>
+            {t.name}
+            <input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
+          </label>
           <label>
             {t.email}
-            <input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} />
+            <input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} />
           </label>
           <label>
             {t.password}
             <input
+              required
               type="password"
               value={form.password}
               onChange={(event) => setForm({ ...form, password: event.target.value })}

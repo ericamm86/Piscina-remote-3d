@@ -43,8 +43,6 @@ export default function App() {
   );
 
   useEffect(() => {
-    api.pools().then(setModels).catch(() => setModels([]));
-    handleSearch("7620 Toscana Blvd, Orlando, FL");
     api
       .me()
       .then(({ user }) => {
@@ -53,6 +51,12 @@ export default function App() {
       })
       .catch(() => api.setAuthToken(""));
   }, []);
+
+  useEffect(() => {
+    if (!authUser) return;
+    api.pools().then(setModels).catch(() => setModels([]));
+    handleSearch("7620 Toscana Blvd, Orlando, FL");
+  }, [authUser]);
 
   useEffect(() => {
     if (!toast) return;
@@ -183,7 +187,6 @@ export default function App() {
               <div className="login-highlights">
                 <span>{t.googleSatellite}</span>
                 <span>{t.render3d}</span>
-                <span>{t.authenticatedSubtitle}</span>
               </div>
             </div>
             <AccountPanel

@@ -51,7 +51,7 @@ piscina-remote-3d/
 - Busca de terreno por endereco
 - Geocodificacao para latitude/longitude
 - Mapa satelite com Google Maps quando a chave esta configurada
-- Fallback demo GIS sem chave externa
+- Fallback GIS local sem chave externa
 - Upload de imagem real do quintal, drone ou Google Maps
 - Piscina 2D arrastavel, redimensionavel e com rotacao
 - Configurador profissional de piscinas

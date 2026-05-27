@@ -13,6 +13,7 @@ const registerSchema = z.object({
 });
 
 const loginSchema = z.object({
+  name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(4)
 });
@@ -58,13 +59,16 @@ export async function login(req, res) {
   let user = await findUserByEmail(credentials.email);
   if (!user && credentials.email === "cliente@demo.com" && credentials.password === "demo123") {
     user = await createUser({
-      name: "Cliente Demo",
+      name: credentials.name,
       email: credentials.email,
       passwordHash: await bcrypt.hash(credentials.password, 10),
       role: "client"
     });
   }
   if (!user) throw httpError(401, "Credenciais invalidas");
+  if (user.name.trim().toLowerCase() !== credentials.name.trim().toLowerCase()) {
+    throw httpError(401, "Nome, email ou senha invalidos");
+  }
 
   const passwordOk = await bcrypt.compare(credentials.password, user.passwordHash);
   if (!passwordOk) throw httpError(401, "Credenciais invalidas");

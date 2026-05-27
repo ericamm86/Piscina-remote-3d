@@ -41,8 +41,8 @@ PostgreSQL com PostGIS no Neon Database:
 2. Backend valida credenciais e gera JWT.
 3. Frontend persiste o token no cliente e envia `Authorization: Bearer <token>`.
 4. Usuario busca endereco.
-5. API usa Google Geocoding ou fallback demo.
-6. Frontend exibe satelite, demo GIS ou imagem real enviada pelo usuario.
+5. API usa Google Geocoding ou fallback GIS local.
+6. Frontend exibe satelite, mapa GIS local ou imagem real enviada pelo usuario.
 7. Usuario posiciona, redimensiona e rotaciona a piscina.
 8. Three.js atualiza a cena 3D.
 9. Usuario gera estimativa e salva o projeto em rota protegida.

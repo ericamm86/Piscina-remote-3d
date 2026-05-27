@@ -12,7 +12,7 @@ Responsavel por interface, estado da aplicacao, consumo da API e responsividade.
 
 ## 3. Integracao Google Maps
 
-Responsavel por Geocoding API, Maps JavaScript API, coordenadas, retangulo editavel e fallback demo.
+Responsavel por Geocoding API, Maps JavaScript API, coordenadas, retangulo editavel e fallback GIS local.
 
 ## 4. Renderizacao 3D Three.js
 

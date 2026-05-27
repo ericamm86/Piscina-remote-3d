@@ -25,8 +25,8 @@ function buildDemoResult(address) {
   const offset = (hashAddress(address) % 70) / 10000;
 
   return {
-    provider: "demo",
-    formattedAddress: `${address} - visualizacao demonstrativa (${location.label})`,
+    provider: "gis-base",
+    formattedAddress: `${address} - base cartografica (${location.label})`,
     coordinates: {
       lat: Number((location.lat + offset).toFixed(6)),
       lng: Number((location.lng - offset).toFixed(6))
@@ -38,7 +38,7 @@ function buildDemoResult(address) {
     },
     gis: {
       crs: "EPSG:4326",
-      source: "fallback-demo",
+      source: "local-gis-base",
       confidence: 0.68
     }
   };
