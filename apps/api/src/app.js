@@ -17,13 +17,7 @@ app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
-      const allowedOrigins = env.clientOrigin.split(",").map((item) => item.trim());
-      const isLocalDev = /^http:\/\/localhost:517\d$/.test(origin || "");
-      const isVercelDeploy = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin || "");
-      if (!origin || allowedOrigins.includes(origin) || isLocalDev || isVercelDeploy) {
-        return callback(null, true);
-      }
-      return callback(new Error("Origem nao permitida por CORS"));
+      callback(null, origin || true);
     },
     credentials: true
   })
