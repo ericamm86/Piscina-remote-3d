@@ -153,6 +153,57 @@ export default function App() {
     setToast(t.loggedOut);
   }
 
+  if (!authUser) {
+    return (
+      <main className="login-shell">
+        <section className="login-hero">
+          <header className="login-topbar">
+            <div>
+              <span className="brand-mark">PS</span>
+              <div>
+                <strong>PoolSight Remote 3D</strong>
+                <span>{t.brandSubtitle}</span>
+              </div>
+            </div>
+            <div className="language-switcher" aria-label={t.language}>
+              <button className={language === "pt" ? "active" : ""} type="button" onClick={() => setLanguage("pt")}>
+                PT
+              </button>
+              <button className={language === "en" ? "active" : ""} type="button" onClick={() => setLanguage("en")}>
+                EN
+              </button>
+            </div>
+          </header>
+
+          <div className="login-layout">
+            <div className="login-copy">
+              <span className="eyebrow">{t.heroEyebrow}</span>
+              <h1>{t.loginHeroTitle}</h1>
+              <p>{t.loginHeroText}</p>
+              <div className="login-highlights">
+                <span>{t.googleSatellite}</span>
+                <span>{t.render3d}</span>
+                <span>{t.authenticatedSubtitle}</span>
+              </div>
+            </div>
+            <AccountPanel
+              t={t}
+              authUser={authUser}
+              projects={projects}
+              adminOverview={adminOverview}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
+              onLogout={handleLogout}
+              loading={loading.auth}
+              variant="login"
+            />
+          </div>
+        </section>
+        <Toast message={toast} />
+      </main>
+    );
+  }
+
   async function handleEstimate() {
     setLoading((current) => ({ ...current, estimate: true }));
     try {

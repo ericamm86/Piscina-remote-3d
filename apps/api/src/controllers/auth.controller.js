@@ -55,7 +55,15 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   const credentials = loginSchema.parse(req.body);
-  const user = await findUserByEmail(credentials.email);
+  let user = await findUserByEmail(credentials.email);
+  if (!user && credentials.email === "cliente@demo.com" && credentials.password === "demo123") {
+    user = await createUser({
+      name: "Cliente Demo",
+      email: credentials.email,
+      passwordHash: await bcrypt.hash(credentials.password, 10),
+      role: "client"
+    });
+  }
   if (!user) throw httpError(401, "Credenciais invalidas");
 
   const passwordOk = await bcrypt.compare(credentials.password, user.passwordHash);

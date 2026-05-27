@@ -119,6 +119,8 @@ export const translations = {
     loggedIn: "Login realizado com sucesso.",
     accountCreated: "Conta criada com sucesso.",
     loggedOut: "Sessão encerrada.",
+    loginHeroTitle: "Acesse a plataforma inteligente de piscinas",
+    loginHeroText: "Entre para visualizar mapas, imagens reais, configurador 3D, histórico de projetos e área administrativa.",
     categories: {
       premium: "premium",
       residential: "residencial",
@@ -255,6 +257,8 @@ export const translations = {
     loggedIn: "Signed in successfully.",
     accountCreated: "Account created successfully.",
     loggedOut: "Session closed.",
+    loginHeroTitle: "Access the intelligent pool platform",
+    loginHeroText: "Sign in to view maps, real images, the 3D configurator, project history, and the admin area.",
     categories: {
       premium: "premium",
       residential: "residential",

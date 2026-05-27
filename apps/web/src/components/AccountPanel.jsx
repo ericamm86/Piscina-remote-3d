@@ -9,7 +9,8 @@ export function AccountPanel({
   onLogin,
   onRegister,
   onLogout,
-  loading
+  loading,
+  variant = "panel"
 }) {
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({
@@ -25,7 +26,7 @@ export function AccountPanel({
   }
 
   return (
-    <section className="account-panel">
+    <section className={variant === "login" ? "account-panel login-card" : "account-panel"}>
       <div className="panel-heading compact">
         <div>
           <span className="eyebrow">{t.authenticatedArea}</span>
