@@ -1175,6 +1175,34 @@ button {
   font-size: 1.8rem;
 }
 
+.estimate-breakdown {
+  display: grid;
+  gap: 7px;
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.estimate-breakdown div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.estimate-breakdown span,
+.estimate-breakdown em {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.76rem;
+  font-style: normal;
+}
+
+.estimate-breakdown em {
+  color: white;
+  font-weight: 900;
+  text-align: right;
+}
+
 .architecture-strip {
   display: grid;
   grid-template-columns: 0.6fr 1fr;

@@ -386,6 +386,34 @@ export function Configurator({
           <span>{t.conceptualEstimate}</span>
           <strong>{formatCurrency(estimate.total, language)}</strong>
           <small>{t.models[poolConfig.modelId] || estimate.model} / {formatArea(estimate.estimatedAreaM2, language)}</small>
+          {estimate.breakdown && (
+            <div className="estimate-breakdown">
+              <div>
+                <span>{t.basePool}</span>
+                <em>{formatCurrency(estimate.breakdown.basePool, language)}</em>
+              </div>
+              <div>
+                <span>{t.interiorFinish}</span>
+                <em>{formatCurrency(estimate.breakdown.interior, language)}</em>
+              </div>
+              <div>
+                <span>{t.copingMaterial}</span>
+                <em>{formatCurrency(estimate.breakdown.coping, language)}</em>
+              </div>
+              <div>
+                <span>{t.deckMaterial}</span>
+                <em>{formatCurrency(estimate.breakdown.deck, language)}</em>
+              </div>
+              <div>
+                <span>{t.poolLighting}</span>
+                <em>{formatCurrency(estimate.breakdown.lighting, language)}</em>
+              </div>
+              <div>
+                <span>{t.landscaping}</span>
+                <em>{formatCurrency(estimate.breakdown.landscaping, language)}</em>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </aside>

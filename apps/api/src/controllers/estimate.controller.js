@@ -11,6 +11,14 @@ const schema = z.object({
       gourmet: z.boolean().optional()
     })
     .optional(),
+  materials: z
+    .object({
+      interior: z.string().optional(),
+      coping: z.string().optional(),
+      deck: z.string().optional(),
+      lighting: z.string().optional()
+    })
+    .optional(),
   remoteSensing: z
     .object({
       slopeRisk: z.enum(["low", "medium", "high"]).optional()

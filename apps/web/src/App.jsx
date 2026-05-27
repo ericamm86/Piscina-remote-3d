@@ -47,6 +47,16 @@ export default function App() {
     () => models.find((model) => model.id === poolConfig.modelId) || models[0],
     [models, poolConfig.modelId]
   );
+  const estimateKey = useMemo(
+    () =>
+      JSON.stringify({
+        modelId: poolConfig.modelId,
+        scale: poolConfig.scale,
+        features: poolConfig.features,
+        materials: poolConfig.materials
+      }),
+    [poolConfig]
+  );
 
   useEffect(() => {
     api
@@ -68,6 +78,12 @@ export default function App() {
     const timer = window.setTimeout(() => setToast(""), 3200);
     return () => window.clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    if (!authUser || !estimate) return undefined;
+    const timer = window.setTimeout(() => handleEstimate({ silent: true }), 450);
+    return () => window.clearTimeout(timer);
+  }, [estimateKey]);
 
   useEffect(() => {
     return () => {
@@ -212,16 +228,17 @@ export default function App() {
     );
   }
 
-  async function handleEstimate() {
+  async function handleEstimate(options = {}) {
     setLoading((current) => ({ ...current, estimate: true }));
     try {
       const result = await api.estimate({
         poolModelId: poolConfig.modelId,
         features: poolConfig.features,
+        materials: poolConfig.materials,
         remoteSensing: { slopeRisk: "low" }
       });
       setEstimate(result);
-      setToast(t.estimateReady);
+      if (!options.silent) setToast(t.estimateReady);
     } catch (error) {
       setToast(error.message);
     } finally {
