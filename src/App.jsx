@@ -272,7 +272,7 @@ export default function App() {
         <nav aria-label={t.navLabel}>
           <a href="#mapa">{t.navMap}</a>
           <a href="#studio">{t.nav3d}</a>
-          <a href="#docs">{t.navSaas}</a>
+          {authUser.role === "admin" && <a href="#docs">{t.navSaas}</a>}
         </nav>
         <div className="language-switcher" aria-label={t.language}>
           <button className={language === "pt" ? "active" : ""} type="button" onClick={() => setLanguage("pt")}>
@@ -331,13 +331,15 @@ export default function App() {
         </div>
       </section>
 
-      <section className="architecture-strip" id="docs">
-        <div>
-          <span className="eyebrow">{t.roadmapEyebrow}</span>
-          <h2>{t.roadmapTitle}</h2>
-        </div>
-        <p>{t.roadmapText}</p>
-      </section>
+      {authUser.role === "admin" && (
+        <section className="architecture-strip" id="docs">
+          <div>
+            <span className="eyebrow">{t.futureResourcesEyebrow}</span>
+            <h2>{t.futureResourcesTitle}</h2>
+          </div>
+          <p>{t.futureResourcesText}</p>
+        </section>
+      )}
 
       <AccountPanel
         t={t}

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+import { hasDatabase } from "../config/db.js";
 import { env } from "../config/env.js";
 import { createUser, findUserByEmail } from "../repositories/user.repository.js";
 import { httpError } from "../utils/httpError.js";
@@ -57,7 +58,7 @@ export async function register(req, res) {
 export async function login(req, res) {
   const credentials = loginSchema.parse(req.body);
   let user = await findUserByEmail(credentials.email);
-  if (!user && credentials.email === "cliente@demo.com" && credentials.password === "demo123") {
+  if (!user && (!hasDatabase || (credentials.email === "cliente@demo.com" && credentials.password === "demo123"))) {
     user = await createUser({
       name: credentials.name,
       email: credentials.email,
@@ -66,9 +67,6 @@ export async function login(req, res) {
     });
   }
   if (!user) throw httpError(401, "Credenciais invalidas");
-  if (user.name.trim().toLowerCase() !== credentials.name.trim().toLowerCase()) {
-    throw httpError(401, "Nome, email ou senha invalidos");
-  }
 
   const passwordOk = await bcrypt.compare(credentials.password, user.passwordHash);
   if (!passwordOk) throw httpError(401, "Credenciais invalidas");
