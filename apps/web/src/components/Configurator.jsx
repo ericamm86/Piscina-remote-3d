@@ -65,6 +65,10 @@ export function Configurator({
     { id: "materials", label: t.tabMaterials, icon: Palette },
     { id: "extras", label: t.tabExtras, icon: Layers }
   ];
+
+  function activateTab(tabId) {
+    setActiveTab(tabId);
+  }
   const featureOptions = [
     { key: "deck", label: t.perimeterDeck, detail: t.deckDetail, icon: Layers },
     { key: "lighting", label: t.ledLighting, detail: t.lightingDetail, icon: Lightbulb },
@@ -132,7 +136,13 @@ export function Configurator({
               type="button"
               role="tab"
               aria-selected={activeTab === tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => activateTab(tab.id)}
+              onPointerUp={(event) => {
+                if (event.pointerType !== "mouse") {
+                  event.preventDefault();
+                  activateTab(tab.id);
+                }
+              }}
             >
               <Icon size={15} />
               <span>{tab.label}</span>
@@ -376,11 +386,18 @@ function Metric({ label, value }) {
 
 function MaterialPicker({ title, detail, options, value, onSelect, t }) {
   return (
-    <div className="material-category">
+      <div className="material-category">
       <div className="material-category-title">
         <strong>{title}</strong>
         <span>{detail}</span>
       </div>
+      <select className="material-select" value={value} onChange={(event) => onSelect(event.target.value)}>
+        {options.map((option) => (
+          <option key={option.id} value={option.id}>
+            {t[option.labelKey]}
+          </option>
+        ))}
+      </select>
       <div className="material-grid compact">
         {options.map((option) => (
           <button
@@ -388,6 +405,12 @@ function MaterialPicker({ title, detail, options, value, onSelect, t }) {
             key={option.id}
             type="button"
             onClick={() => onSelect(option.id)}
+            onPointerUp={(event) => {
+              if (event.pointerType !== "mouse") {
+                event.preventDefault();
+                onSelect(option.id);
+              }
+            }}
           >
             <span style={{ backgroundColor: option.color }} />
             <strong>{t[option.labelKey]}</strong>
