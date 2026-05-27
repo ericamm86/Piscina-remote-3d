@@ -2,7 +2,11 @@
   "name": "piscina-remote-3d",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Sistema web de sensoriamento remoto e visualizacao 3D para piscinas residenciais.",
+  "engines": {
+    "node": ">=20"
+  },
   "workspaces": [
     "apps/api",
     "apps/web"
