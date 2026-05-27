@@ -4,18 +4,18 @@
   "buildCommand": "npm run build",
   "outputDirectory": "apps/web/dist",
   "functions": {
-    "apps/api/api/index.js": {
-      "runtime": "nodejs22.x"
+    "api/index.js": {
+      "runtime": "nodejs20.x"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/apps/api/api/index.js"
+      "destination": "/api/index.js"
     },
     {
       "source": "/health",
-      "destination": "/apps/api/api/index.js"
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",
