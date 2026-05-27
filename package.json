@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "dev": "concurrently -n API,WEB -c green,cyan \"npm run dev -w apps/api\" \"npm run dev -w apps/web\"",
-    "build": "npm run build -w apps/web",
+    "build": "npm run build -w apps/web && node scripts/prepare-vercel-output.js",
     "start": "npm run start -w apps/api",
     "lint": "npm run lint -w apps/web",
     "test": "npm run test -w apps/api",

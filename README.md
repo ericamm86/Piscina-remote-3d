@@ -135,6 +135,10 @@ Authorization: Bearer <token>
 
 1. Importe o repositorio no Vercel.
 2. Use o `vercel.json` da raiz.
+   - Root directory: deixe em branco ou use `./`
+   - Build command: `npm run build`
+   - Output directory: deixe em branco
+   - Install command: `npm install`
 3. Configure as variaveis:
    - `DATABASE_URL`
    - `JWT_SECRET`
