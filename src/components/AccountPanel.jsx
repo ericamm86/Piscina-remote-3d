@@ -106,6 +106,8 @@ export function AccountPanel({
               {t.name}
               <input
                 ref={firstInputRef}
+                autoComplete="name"
+                name="name"
                 required
                 value={form.name}
                 onChange={(event) => setForm({ ...form, name: event.target.value })}
@@ -116,6 +118,8 @@ export function AccountPanel({
             {t.email}
             <input
               ref={mode === "login" ? firstInputRef : null}
+              autoComplete="email"
+              name="email"
               required
               type="email"
               value={form.email}
@@ -125,6 +129,8 @@ export function AccountPanel({
           <label>
             {t.password}
             <input
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              name="password"
               required
               type="password"
               value={form.password}
