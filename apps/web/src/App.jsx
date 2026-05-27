@@ -287,6 +287,9 @@ export default function App() {
       <section className="hero-band">
         <div className="hero-copy">
           <span className="eyebrow">{t.heroEyebrow}</span>
+          <div className="welcome-banner">
+            {t.welcome}, <strong>{authUser.name}</strong>
+          </div>
           <h1>{t.heroTitle}</h1>
           <p>{t.heroText}</p>
         </div>

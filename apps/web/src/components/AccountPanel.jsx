@@ -18,16 +18,16 @@ export function AccountPanel({
     email: "",
     password: ""
   });
-  const nameInputRef = useRef(null);
+  const firstInputRef = useRef(null);
 
   function selectMode(nextMode) {
     setMode(nextMode);
-    window.setTimeout(() => nameInputRef.current?.focus(), 0);
+    window.setTimeout(() => firstInputRef.current?.focus(), 0);
   }
 
   function submit(event) {
     event.preventDefault();
-    if (mode === "login") onLogin({ name: form.name, email: form.email, password: form.password });
+    if (mode === "login") onLogin({ email: form.email, password: form.password });
     else onRegister(form);
   }
 
@@ -101,18 +101,26 @@ export function AccountPanel({
             <span>{mode === "login" ? t.loginModeHelp : t.registerModeHelp}</span>
           </div>
 
-          <label>
-            {t.name}
-            <input
-              ref={nameInputRef}
-              required
-              value={form.name}
-              onChange={(event) => setForm({ ...form, name: event.target.value })}
-            />
-          </label>
+          {mode === "register" && (
+            <label>
+              {t.name}
+              <input
+                ref={firstInputRef}
+                required
+                value={form.name}
+                onChange={(event) => setForm({ ...form, name: event.target.value })}
+              />
+            </label>
+          )}
           <label>
             {t.email}
-            <input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} />
+            <input
+              ref={mode === "login" ? firstInputRef : null}
+              required
+              type="email"
+              value={form.email}
+              onChange={(event) => setForm({ ...form, email: event.target.value })}
+            />
           </label>
           <label>
             {t.password}

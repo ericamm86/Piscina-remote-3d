@@ -240,6 +240,22 @@ button {
   letter-spacing: 0;
 }
 
+.welcome-banner {
+  width: fit-content;
+  margin-top: 14px;
+  padding: 9px 12px;
+  border: 1px solid rgba(31, 122, 87, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.74);
+  color: #315246;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.welcome-banner strong {
+  color: var(--ink);
+}
+
 .hero-copy p {
   max-width: 720px;
   margin: 0;

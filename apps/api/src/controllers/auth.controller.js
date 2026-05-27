@@ -14,7 +14,6 @@ const registerSchema = z.object({
 });
 
 const loginSchema = z.object({
-  name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(4)
 });
@@ -60,7 +59,7 @@ export async function login(req, res) {
   let user = await findUserByEmail(credentials.email);
   if (!user && (!hasDatabase || (credentials.email === "cliente@demo.com" && credentials.password === "demo123"))) {
     user = await createUser({
-      name: credentials.name,
+      name: credentials.email === "cliente@demo.com" ? "Cliente Demo" : credentials.email.split("@")[0],
       email: credentials.email,
       passwordHash: await bcrypt.hash(credentials.password, 10),
       role: "client"
