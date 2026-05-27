@@ -2,11 +2,12 @@ import { MapPin, Search } from "lucide-react";
 import { useState } from "react";
 
 export function AddressSearch({ onSearch, loading, t }) {
-  const [address, setAddress] = useState("7620 Toscana Blvd, Orlando, FL");
+  const [address, setAddress] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
-    onSearch(address);
+    const trimmedAddress = address.trim();
+    if (trimmedAddress) onSearch(trimmedAddress);
   }
 
   return (
@@ -18,6 +19,7 @@ export function AddressSearch({ onSearch, loading, t }) {
       <div className="address-row">
         <input
           id="address"
+          required
           value={address}
           onChange={(event) => setAddress(event.target.value)}
           placeholder={t.addressPlaceholder}

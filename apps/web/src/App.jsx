@@ -55,7 +55,6 @@ export default function App() {
   useEffect(() => {
     if (!authUser) return;
     api.pools().then(setModels).catch(() => setModels([]));
-    handleSearch("7620 Toscana Blvd, Orlando, FL");
   }, [authUser]);
 
   useEffect(() => {
