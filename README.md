@@ -137,7 +137,7 @@ Authorization: Bearer <token>
 2. Use o `vercel.json` da raiz.
    - Root directory: deixe em branco ou use `./`
    - Build command: `npm run build`
-   - Output directory: deixe em branco
+   - Output directory: `dist`
    - Install command: `npm install`
 3. Configure as variaveis:
    - `DATABASE_URL`
