@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4200";
+const API_URL = import.meta.env.VITE_API_URL || "";
 let authToken = window.localStorage.getItem("poolsight_token") || "";
 
 export function setAuthToken(token) {
@@ -9,12 +9,12 @@ export function setAuthToken(token) {
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       ...options.headers
-    },
-    ...options
+    }
   });
 
   if (!response.ok) {
