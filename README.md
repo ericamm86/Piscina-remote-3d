@@ -40,6 +40,7 @@ Sem chave, o sistema roda em modo demonstrativo com mapa GIS sintetico.
 - Visualizacao de terreno por satelite quando a API esta ativa
 - Upload de foto real do quintal, drone ou vista aerea como base visual do projeto
 - Selecao manual da area do quintal
+- Piscina 2D arrastavel, redimensionavel e com controle de rotacao sobre imagem real
 - Modelos 3D: retangular, organico e spa compacto
 - Troca de cor da agua, escala, deck, iluminacao, arvores e area gourmet
 - Modo imersivo com WebXR/VR e visualizacao anaglifa vermelho/ciano

@@ -12,6 +12,7 @@ const defaultConfig = {
   color: "#1da9c9",
   scale: 1,
   position: { x: 62, y: 66 },
+  footprint: { width: 190, height: 108, rotation: -7 },
   features: {
     deck: true,
     lighting: true,
@@ -174,7 +175,16 @@ export default function App() {
           siteImage={siteImage}
           onSiteImageUpload={handleSiteImageUpload}
           onSiteImageRemove={handleSiteImageRemove}
-          onPoolPositionChange={(position) => setPoolConfig((current) => ({ ...current, position }))}
+          onPoolLayoutChange={(layout) =>
+            setPoolConfig((current) => ({
+              ...current,
+              position: layout.position || current.position,
+              footprint: {
+                ...current.footprint,
+                ...layout.footprint
+              }
+            }))
+          }
         />
         <div className="studio-column" id="studio">
           <ThreePoolScene model={selectedModel} poolConfig={poolConfig} />

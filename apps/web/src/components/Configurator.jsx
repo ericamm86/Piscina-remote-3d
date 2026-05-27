@@ -143,6 +143,29 @@ export function Configurator({
             />
           </label>
 
+          <label className="precision-field">
+            <span>
+              Rotacao 2D
+              <strong>{poolConfig.footprint?.rotation || 0} deg</strong>
+            </span>
+            <input
+              type="range"
+              min="-90"
+              max="90"
+              step="1"
+              value={poolConfig.footprint?.rotation || 0}
+              onChange={(event) =>
+                onChange({
+                  ...poolConfig,
+                  footprint: {
+                    ...poolConfig.footprint,
+                    rotation: Number(event.target.value)
+                  }
+                })
+              }
+            />
+          </label>
+
           {scaledDimensions && (
             <div className="technical-grid">
               <Metric label="Largura" value={`${scaledDimensions.width.toFixed(1)} m`} />

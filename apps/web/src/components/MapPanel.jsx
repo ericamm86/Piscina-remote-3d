@@ -1,13 +1,35 @@
 import { Crosshair, ImageUp, Layers, Satellite, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Rnd } from "react-rnd";
 import { useGoogleMaps } from "../hooks/useGoogleMaps";
 
-export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, onSiteImageRemove, onPoolPositionChange }) {
+export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, onSiteImageRemove, onPoolLayoutChange }) {
   const mapElement = useRef(null);
+  const realMapRef = useRef(null);
   const mapInstance = useRef(null);
   const rectangleRef = useRef(null);
   const { status, google } = useGoogleMaps();
   const [demoPosition, setDemoPosition] = useState(poolConfig.position);
+  const [realPool, setRealPool] = useState(() => ({
+    x: 0,
+    y: 0,
+    width: poolConfig.footprint?.width || 190,
+    height: poolConfig.footprint?.height || 108
+  }));
+
+  useEffect(() => {
+    if (!siteImage || !realMapRef.current) return;
+
+    const rect = realMapRef.current.getBoundingClientRect();
+    const width = poolConfig.footprint?.width || 190;
+    const height = poolConfig.footprint?.height || 108;
+    setRealPool({
+      x: (rect.width * poolConfig.position.x) / 100 - width / 2,
+      y: (rect.height * poolConfig.position.y) / 100 - height / 2,
+      width,
+      height
+    });
+  }, [siteImage]);
 
   useEffect(() => {
     if (status !== "ready" || !google || !mapElement.current || !geocode?.coordinates) return;
@@ -70,7 +92,27 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
       y: Math.round(((event.clientY - rect.top) / rect.height) * 100)
     };
     setDemoPosition(next);
-    onPoolPositionChange(next);
+    onPoolLayoutChange({ position: next });
+  }
+
+  function syncRealPool(nextRect) {
+    const bounds = realMapRef.current?.getBoundingClientRect();
+    if (!bounds?.width || !bounds?.height) return;
+
+    const position = {
+      x: Math.round(((nextRect.x + nextRect.width / 2) / bounds.width) * 100),
+      y: Math.round(((nextRect.y + nextRect.height / 2) / bounds.height) * 100)
+    };
+
+    setDemoPosition(position);
+    setRealPool(nextRect);
+    onPoolLayoutChange({
+      position,
+      footprint: {
+        width: Math.round(nextRect.width),
+        height: Math.round(nextRect.height)
+      }
+    });
   }
 
   return (
@@ -110,27 +152,48 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
       </div>
 
       {siteImage ? (
-        <button
+        <div
           className="demo-map real-image-map"
-          type="button"
-          onClick={handleDemoClick}
           aria-label="Imagem real do terreno"
+          role="application"
+          ref={realMapRef}
           style={{ backgroundImage: `linear-gradient(rgba(12, 22, 18, 0.12), rgba(12, 22, 18, 0.12)), url(${siteImage.url})` }}
         >
           <span className="real-image-grid" />
-          <span
-            className="demo-pool real-image-pool"
-            style={{
-              left: `${demoPosition.x}%`,
-              top: `${demoPosition.y}%`,
-              backgroundColor: poolConfig.color
-            }}
-          />
+          <Rnd
+            className="pool-rnd"
+            bounds="parent"
+            size={{ width: realPool.width, height: realPool.height }}
+            position={{ x: realPool.x, y: realPool.y }}
+            minWidth={86}
+            minHeight={48}
+            lockAspectRatio={false}
+            onDragStop={(_event, data) => syncRealPool({ ...realPool, x: data.x, y: data.y })}
+            onResizeStop={(_event, _direction, ref, _delta, position) =>
+              syncRealPool({
+                x: position.x,
+                y: position.y,
+                width: ref.offsetWidth,
+                height: ref.offsetHeight
+              })
+            }
+          >
+            <span
+              className="real-image-pool"
+              style={{
+                backgroundColor: poolConfig.color,
+                transform: `rotate(${poolConfig.footprint?.rotation || 0}deg)`
+              }}
+            >
+              <span className="pool-ruler horizontal">{Math.round(realPool.width)} px</span>
+              <span className="pool-ruler vertical">{Math.round(realPool.height)} px</span>
+            </span>
+          </Rnd>
           <span className="demo-target">
             <Crosshair size={18} />
-            Clique na foto para posicionar a piscina
+            Arraste e redimensione a piscina
           </span>
-        </button>
+        </div>
       ) : status === "ready" ? (
         <div className="google-map" ref={mapElement} aria-label="Mapa satelite do terreno" />
       ) : (

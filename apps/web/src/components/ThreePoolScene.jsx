@@ -206,6 +206,7 @@ function buildPoolScene(state, model, config) {
   const x = ((config.position.x - 50) / 50) * 3.2;
   const z = ((config.position.y - 50) / 50) * 2.8;
   poolGroup.position.set(x, 0.03, z);
+  poolGroup.rotation.y = THREE.MathUtils.degToRad(config.footprint?.rotation || 0);
 
   if (config.features.deck) {
     const deck = new THREE.Mesh(

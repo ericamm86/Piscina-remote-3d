@@ -32,7 +32,7 @@ O sistema aceita imagem local em JPG, PNG ou WebP para simular uma base real de 
 - Captura aerea autorizada
 - Levantamento preliminar da obra
 
-No MVP, a piscina e sobreposta manualmente sobre essa imagem. Em uma etapa futura, pontos de controle e escala real podem georreferenciar a foto para medições mais precisas.
+No MVP, a piscina e sobreposta manualmente sobre essa imagem com controles de arrastar, redimensionar e rotacionar. Em uma etapa futura, pontos de controle e escala real podem georreferenciar a foto para medições mais precisas.
 
 ## Pipeline Avancado
 

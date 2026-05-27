@@ -6,7 +6,7 @@
 - Geocodificacao
 - Mapa satelite ou demo GIS
 - Upload de imagem real do quintal ou drone
-- Posicionamento manual da piscina
+- Posicionamento manual da piscina com drag, resize e rotacao
 - Renderizacao 3D simples
 - Visualizacao WebXR/VR e modo anaglifo
 - Troca de modelo, cor e opcionais
