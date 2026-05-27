@@ -83,11 +83,11 @@ export function AccountPanel({
           <div className="auth-toggle">
             <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>
               <Lock size={15} />
-              {t.login}
+              {t.haveAccount}
             </button>
             <button className={mode === "register" ? "active" : ""} type="button" onClick={() => setMode("register")}>
               <UserPlus size={15} />
-              {t.register}
+              {t.newAccount}
             </button>
           </div>
 
@@ -108,8 +108,8 @@ export function AccountPanel({
               onChange={(event) => setForm({ ...form, password: event.target.value })}
             />
           </label>
-          <button type="submit" disabled={loading}>
-            {mode === "login" ? t.login : t.register}
+          <button className="auth-submit" type="submit" disabled={loading}>
+            {loading ? t.authLoading : mode === "login" ? t.loginAction : t.registerAction}
           </button>
         </form>
       )}

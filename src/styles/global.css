@@ -1194,6 +1194,17 @@ button {
   color: white;
 }
 
+.auth-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+}
+
+.auth-submit:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
 .auth-form label {
   display: grid;
   gap: 7px;
