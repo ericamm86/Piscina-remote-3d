@@ -106,8 +106,13 @@ export function Configurator({
   }
 
   function updateMaterial(category, value) {
+    const nextFeatures = { ...poolConfig.features };
+    if (category === "deck") nextFeatures.deck = true;
+    if (category === "lighting") nextFeatures.lighting = true;
+
     onChange({
       ...poolConfig,
+      features: nextFeatures,
       materials: {
         ...selectedMaterials,
         [category]: value
@@ -246,6 +251,12 @@ export function Configurator({
                 type="button"
                 title={color.name}
                 onClick={() => onChange({ ...poolConfig, color: color.value })}
+                onPointerUp={(event) => {
+                  if (event.pointerType !== "mouse") {
+                    event.preventDefault();
+                    onChange({ ...poolConfig, color: color.value });
+                  }
+                }}
               >
                 <span style={{ backgroundColor: color.value }} />
                 <strong>{color.name}</strong>
@@ -328,6 +339,12 @@ export function Configurator({
                   key={feature.key}
                   type="button"
                   onClick={() => updateFeature(feature.key)}
+                  onPointerUp={(event) => {
+                    if (event.pointerType !== "mouse") {
+                      event.preventDefault();
+                      updateFeature(feature.key);
+                    }
+                  }}
                 >
                   <Icon size={17} />
                   <span>

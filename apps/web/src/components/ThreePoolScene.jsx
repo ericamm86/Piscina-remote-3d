@@ -6,6 +6,12 @@ import { AnaglyphEffect } from "three/examples/jsm/effects/AnaglyphEffect.js";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
 const materialColors = {
+  interior: {
+    "glass-mosaic": "#64d4e7",
+    porcelain: "#dfe8e6",
+    "blue-vinyl": "#2f79d6",
+    "stone-texture": "#93a69d"
+  },
   coping: {
     travertine: "#d6be92",
     "white-marble": "#f3efe7",
@@ -224,6 +230,7 @@ function buildPoolScene(state, model, config) {
   const width = dimensions.width * config.scale;
   const length = dimensions.length * config.scale;
   const selectedMaterials = {
+    interior: "glass-mosaic",
     coping: "travertine",
     deck: "cumaru",
     lighting: "warm-led",
@@ -252,6 +259,15 @@ function buildPoolScene(state, model, config) {
     object.receiveShadow = true;
   });
   poolGroup.add(shell);
+
+  const interior = createInteriorSurface(
+    model.id,
+    width * 0.9,
+    length * 0.9,
+    materialColors.interior[selectedMaterials.interior] || "#64d4e7"
+  );
+  interior.position.y = 0.22;
+  poolGroup.add(interior);
 
   const water = createWater(model.id, width * 0.86, length * 0.86, config.color);
   water.position.y = 0.29;
@@ -342,14 +358,42 @@ function createWater(modelId, width, length, color) {
   return mesh;
 }
 
+function createInteriorSurface(modelId, width, length, color) {
+  const material = new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.38,
+    metalness: 0.04
+  });
+
+  if (modelId === "family-freeform") {
+    const shape = new THREE.Shape();
+    shape.ellipse(0, 0, width / 2, length / 2, 0, Math.PI * 2);
+    const mesh = new THREE.Mesh(new THREE.ShapeGeometry(shape, 72), material);
+    mesh.rotation.x = -Math.PI / 2;
+    return mesh;
+  }
+
+  if (modelId === "compact-spa") {
+    const mesh = new THREE.Mesh(new THREE.CircleGeometry(width / 2, 64), material);
+    mesh.rotation.x = -Math.PI / 2;
+    return mesh;
+  }
+
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, length), material);
+  mesh.rotation.x = -Math.PI / 2;
+  return mesh;
+}
+
 function addPoolLights(group, width, length, color) {
   const positions = [
     [-width / 2 + 0.35, 0.42, -length / 2 + 0.35],
-    [width / 2 - 0.35, 0.42, length / 2 - 0.35]
+    [width / 2 - 0.35, 0.42, length / 2 - 0.35],
+    [width / 2 - 0.35, 0.42, -length / 2 + 0.35],
+    [-width / 2 + 0.35, 0.42, length / 2 - 0.35]
   ];
 
   positions.forEach((position) => {
-    const light = new THREE.PointLight(color, 1.7, 4);
+    const light = new THREE.PointLight(color, 3.2, 7);
     light.position.set(...position);
     group.add(light);
 
@@ -360,13 +404,28 @@ function addPoolLights(group, width, length, color) {
     lens.position.set(...position);
     group.add(lens);
   });
+
+  const glow = new THREE.Mesh(
+    new THREE.PlaneGeometry(width + 0.8, length + 0.8),
+    new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.22,
+      depthWrite: false
+    })
+  );
+  glow.rotation.x = -Math.PI / 2;
+  glow.position.y = 0.34;
+  group.add(glow);
 }
 
 function addTrees(group, width, length) {
   const spots = [
     [-width / 2 - 1.2, 0, -length / 2 - 0.8],
     [width / 2 + 1.2, 0, length / 2 + 0.9],
-    [width / 2 + 1.35, 0, -length / 2 - 1.05]
+    [width / 2 + 1.35, 0, -length / 2 - 1.05],
+    [-width / 2 - 1.35, 0, length / 2 + 0.65],
+    [0, 0, length / 2 + 1.35]
   ];
 
   spots.forEach(([x, y, z]) => {
@@ -386,6 +445,28 @@ function addTrees(group, width, length) {
     canopy.castShadow = true;
     group.add(canopy);
   });
+
+  const hedgeMaterial = new THREE.MeshStandardMaterial({ color: "#2c6f42", roughness: 0.9 });
+  const hedgeParts = [
+    { size: [width + 3.4, 0.55, 0.28], position: [0, 0.28, length / 2 + 1.55] },
+    { size: [0.28, 0.55, length + 2.4], position: [width / 2 + 1.6, 0.28, 0] }
+  ];
+
+  hedgeParts.forEach((part) => {
+    const hedge = new THREE.Mesh(new THREE.BoxGeometry(...part.size), hedgeMaterial);
+    hedge.position.set(...part.position);
+    hedge.castShadow = true;
+    hedge.receiveShadow = true;
+    group.add(hedge);
+  });
+
+  const flowerMaterial = new THREE.MeshStandardMaterial({ color: "#d56d4d", roughness: 0.75 });
+  for (let index = 0; index < 8; index += 1) {
+    const flower = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), flowerMaterial);
+    flower.position.set(-width / 2 - 1 + index * 0.32, 0.16, length / 2 + 1.15);
+    flower.castShadow = true;
+    group.add(flower);
+  }
 }
 
 function addGourmetArea(group, width, length) {
