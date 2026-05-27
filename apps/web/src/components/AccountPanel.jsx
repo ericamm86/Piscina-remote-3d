@@ -96,11 +96,6 @@ export function AccountPanel({
               {t.newAccount}
             </button>
           </div>
-          <div className="auth-mode-note">
-            <strong>{mode === "login" ? t.loginModeTitle : t.registerModeTitle}</strong>
-            <span>{mode === "login" ? t.loginModeHelp : t.registerModeHelp}</span>
-          </div>
-
           {mode === "register" && (
             <label>
               {t.name}
