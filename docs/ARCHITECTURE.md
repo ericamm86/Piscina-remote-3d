@@ -2,42 +2,82 @@
 
 ## Visao Geral
 
-O PoolSight Remote 3D e uma plataforma web para pre-venda e estudo conceitual de piscinas residenciais. O sistema combina geocodificacao, imagens aereas, camada GIS, configurador 3D e estimativa comercial.
+O PoolSight Remote 3D e uma plataforma web para planejamento de piscinas residenciais com sensoriamento remoto, GIS, mapas, imagem real, autenticacao e renderizacao 3D.
+
+## Camadas
+
+### Frontend
+
+- React e Vite
+- TailwindCSS preparado para evolucao de design system
+- Componentes isolados por responsabilidade
+- Cliente REST em `src/lib/api.js`
+- Internacionalizacao PT/EN em `src/lib/i18n.js`
+- Three.js/WebXR isolado em `ThreePoolScene`
+
+### Backend
+
+- `routes`: declaracao das APIs REST
+- `controllers`: validacao e entrada HTTP
+- `services`: regras de negocio e integracoes externas
+- `repositories`: persistencia PostgreSQL/Neon ou fallback em memoria
+- `middleware`: JWT Bearer Token, roles e seguranca
+- `config`: variaveis e conexao com banco
+
+### Banco
+
+PostgreSQL com PostGIS no Neon Database:
+
+- `users`
+- `auth_sessions`
+- `terrains`
+- `projects`
+- `pool_models`
+- `estimates`
 
 ## Fluxo Principal
 
-1. Cliente informa o endereco.
-2. Backend consulta a Google Geocoding API ou retorna coordenada demo.
-3. Frontend centraliza a residencia no mapa.
-4. Usuario seleciona manualmente a area livre do quintal.
-5. Three.js renderiza o lote, a residencia, a piscina e opcionais.
-6. Backend calcula uma estimativa de custo.
-7. Projeto e salvo com endereco, coordenadas, configuracao 3D e metadados GIS.
+1. Usuario cria conta ou realiza login.
+2. Backend valida credenciais e gera JWT.
+3. Frontend persiste o token no cliente e envia `Authorization: Bearer <token>`.
+4. Usuario busca endereco.
+5. API usa Google Geocoding ou fallback demo.
+6. Frontend exibe satelite, demo GIS ou imagem real enviada pelo usuario.
+7. Usuario posiciona, redimensiona e rotaciona a piscina.
+8. Three.js atualiza a cena 3D.
+9. Usuario gera estimativa e salva o projeto em rota protegida.
+10. Historico fica disponivel na area autenticada.
 
-## Modulos
+## APIs
 
-### API
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `POST /api/geocode`
+- `GET /api/pools`
+- `POST /api/estimate`
+- `GET /api/projects`
+- `POST /api/projects`
+- `GET /api/admin/overview`
+- `GET /health`
 
-- `geocode.routes.js`: entrada de endereco e normalizacao geografica.
-- `pools.routes.js`: catalogo de modelos de piscina.
-- `estimate.routes.js`: calculo de orcamento conceitual.
-- `projects.routes.js`: persistencia de projetos.
-- `auth.routes.js`: login demo com JWT.
+## Integracoes
 
-### Web
+- Google Maps JavaScript API
+- Google Geocoding API
+- Neon PostgreSQL
+- PostGIS para coordenadas e geometrias
+- WebXR para VR
 
-- `MapPanel`: visualizacao satelite ou demo GIS e selecao da area.
-- `ThreePoolScene`: cena WebGL com Three.js, WebXR/VR e modo anaglifo.
-- `Configurator`: controles de modelo, escala, cor e opcionais.
-- `AddressSearch`: entrada de endereco.
+## Expansao Futura
 
-## Integracoes Externas
+A arquitetura esta preparada para:
 
-- Google Geocoding API: endereco para latitude/longitude.
-- Google Maps JavaScript API: mapa satelite e retangulo editavel.
-- Futuro: Places API para autocomplete, Static Maps API para relatorios, drone imagery APIs para ortomosaicos.
-- WebXR Device API: entrada imersiva em headsets compativeis, como Meta Quest, usando Three.js.
-
-## Escalabilidade
-
-Para producao, substituir o `projectStore` em JSON por PostgreSQL/PostGIS. A API ja separa rotas e servicos para facilitar troca de persistencia, filas de processamento de imagem, workers de IA e renderizacao server-side.
+- IA e visao computacional
+- deteccao automatica de lote
+- integracao com drones
+- fotogrametria
+- LiDAR e nuvem de pontos
+- realidade aumentada
+- modulos admin e multi-tenant
+- filas de processamento e workers

@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { poolModels } from "../services/pools.service.js";
+import { listPools } from "../controllers/pools.controller.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
 
-router.get("/", (_req, res) => {
-  res.json(poolModels);
-});
+router.get("/", asyncHandler(listPools));
 
 export default router;

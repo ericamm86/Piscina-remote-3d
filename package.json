@@ -12,7 +12,8 @@
     "build": "npm run build -w apps/web",
     "start": "npm run start -w apps/api",
     "lint": "npm run lint -w apps/web",
-    "test": "npm run test -w apps/api"
+    "test": "npm run test -w apps/api",
+    "db:init": "npm run db:init -w apps/api"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

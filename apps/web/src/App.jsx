@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { AccountPanel } from "./components/AccountPanel";
 import { AddressSearch } from "./components/AddressSearch";
 import { Configurator } from "./components/Configurator";
 import { KpiStrip } from "./components/KpiStrip";
@@ -29,8 +30,11 @@ export default function App() {
   const [estimate, setEstimate] = useState(null);
   const [siteImage, setSiteImage] = useState(null);
   const [language, setLanguage] = useState("pt");
+  const [authUser, setAuthUser] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [adminOverview, setAdminOverview] = useState(null);
   const [toast, setToast] = useState("");
-  const [loading, setLoading] = useState({ address: false, estimate: false, save: false });
+  const [loading, setLoading] = useState({ address: false, estimate: false, save: false, auth: false });
   const t = translations[language];
 
   const selectedModel = useMemo(
@@ -41,6 +45,13 @@ export default function App() {
   useEffect(() => {
     api.pools().then(setModels).catch(() => setModels([]));
     handleSearch("7620 Toscana Blvd, Orlando, FL");
+    api
+      .me()
+      .then(({ user }) => {
+        setAuthUser(user);
+        refreshProjects(user);
+      })
+      .catch(() => api.setAuthToken(""));
   }, []);
 
   useEffect(() => {
@@ -95,6 +106,53 @@ export default function App() {
     }
   }
 
+  async function refreshProjects(user = authUser) {
+    if (!user) return;
+    const savedProjects = await api.projects();
+    setProjects(savedProjects);
+    if (user.role === "admin") {
+      setAdminOverview(await api.adminOverview());
+    }
+  }
+
+  async function handleLogin(credentials) {
+    setLoading((current) => ({ ...current, auth: true }));
+    try {
+      const result = await api.login(credentials);
+      api.setAuthToken(result.token);
+      setAuthUser(result.user);
+      await refreshProjects(result.user);
+      setToast(t.loggedIn);
+    } catch (error) {
+      setToast(error.message);
+    } finally {
+      setLoading((current) => ({ ...current, auth: false }));
+    }
+  }
+
+  async function handleRegister(payload) {
+    setLoading((current) => ({ ...current, auth: true }));
+    try {
+      const result = await api.register(payload);
+      api.setAuthToken(result.token);
+      setAuthUser(result.user);
+      await refreshProjects(result.user);
+      setToast(t.accountCreated);
+    } catch (error) {
+      setToast(error.message);
+    } finally {
+      setLoading((current) => ({ ...current, auth: false }));
+    }
+  }
+
+  function handleLogout() {
+    api.setAuthToken("");
+    setAuthUser(null);
+    setProjects([]);
+    setAdminOverview(null);
+    setToast(t.loggedOut);
+  }
+
   async function handleEstimate() {
     setLoading((current) => ({ ...current, estimate: true }));
     try {
@@ -118,6 +176,11 @@ export default function App() {
       return;
     }
 
+    if (!authUser) {
+      setToast(t.loginBeforeSave);
+      return;
+    }
+
     setLoading((current) => ({ ...current, save: true }));
     try {
       await api.saveProject({
@@ -133,6 +196,7 @@ export default function App() {
           selectedBackyardPoint: poolConfig.position
         }
       });
+      await refreshProjects();
       setToast(t.projectSaved);
     } catch (error) {
       setToast(error.message);
@@ -220,6 +284,17 @@ export default function App() {
         </div>
         <p>{t.roadmapText}</p>
       </section>
+
+      <AccountPanel
+        t={t}
+        authUser={authUser}
+        projects={projects}
+        adminOverview={adminOverview}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+        onLogout={handleLogout}
+        loading={loading.auth}
+      />
 
       <Toast message={toast} />
     </main>
