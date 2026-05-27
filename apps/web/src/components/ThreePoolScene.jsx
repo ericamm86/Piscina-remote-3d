@@ -5,7 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { AnaglyphEffect } from "three/examples/jsm/effects/AnaglyphEffect.js";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
-export function ThreePoolScene({ model, poolConfig }) {
+export function ThreePoolScene({ model, poolConfig, t }) {
   const hostRef = useRef(null);
   const vrSlotRef = useRef(null);
   const sceneState = useRef(null);
@@ -150,12 +150,12 @@ export function ThreePoolScene({ model, poolConfig }) {
       <div className="panel-heading overlay">
         <div>
           <span className="eyebrow">Render 3D</span>
-          <h2>{model?.name || "Piscina residencial"}</h2>
+          <h2>{t.models[model?.id] || model?.name || t.models["lap-modern"]}</h2>
         </div>
         <div className="map-badges">
           <span>
             <Rotate3D size={15} />
-            Orbit
+            {t.orbit}
           </span>
           <span>
             <Maximize2 size={15} />
@@ -163,24 +163,24 @@ export function ThreePoolScene({ model, poolConfig }) {
           </span>
         </div>
       </div>
-      <div className="immersive-toolbar" aria-label="Modos de visualizacao imersiva">
+      <div className="immersive-toolbar" aria-label={t.normalTitle}>
         <button
           className={viewMode === "standard" ? "active" : ""}
           type="button"
           onClick={() => setViewMode("standard")}
-          title="Visualizacao 3D padrao"
+          title={t.normalTitle}
         >
           <View size={16} />
-          <span>Normal</span>
+          <span>{t.normal}</span>
         </button>
         <button
           className={viewMode === "anaglyph" ? "active" : ""}
           type="button"
           onClick={() => setViewMode("anaglyph")}
-          title="Modo 3D anaglifo vermelho e ciano"
+          title={t.anaglyphTitle}
         >
           <Glasses size={16} />
-          <span>Anaglifo</span>
+          <span>{t.anaglyph}</span>
         </button>
         <div className="vr-slot" ref={vrSlotRef} />
       </div>

@@ -12,25 +12,13 @@ import {
   Trees
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { formatArea, formatCurrency, formatLength } from "../lib/i18n";
 
 const colors = [
   { value: "#1da9c9", name: "Lagoon" },
   { value: "#18b79a", name: "Aqua" },
   { value: "#2f79d6", name: "Deep" },
   { value: "#49c5f6", name: "Crystal" }
-];
-
-const tabs = [
-  { id: "design", label: "Projeto", icon: Grid2X2 },
-  { id: "materials", label: "Materiais", icon: Palette },
-  { id: "extras", label: "Extras", icon: Layers }
-];
-
-const featureOptions = [
-  { key: "deck", label: "Deck perimetral", detail: "Madeira ou cimenticio", icon: Layers },
-  { key: "lighting", label: "Iluminacao LED", detail: "Pontos subaquaticos", icon: Lightbulb },
-  { key: "trees", label: "Paisagismo", detail: "Vegetacao e sombra", icon: Trees },
-  { key: "gourmet", label: "Area gourmet", detail: "Modulo externo", icon: Lamp }
 ];
 
 export function Configurator({
@@ -41,9 +29,22 @@ export function Configurator({
   onSave,
   estimate,
   saving,
-  estimating
+  estimating,
+  language,
+  t
 }) {
   const [activeTab, setActiveTab] = useState("design");
+  const tabs = [
+    { id: "design", label: t.tabDesign, icon: Grid2X2 },
+    { id: "materials", label: t.tabMaterials, icon: Palette },
+    { id: "extras", label: t.tabExtras, icon: Layers }
+  ];
+  const featureOptions = [
+    { key: "deck", label: t.perimeterDeck, detail: t.deckDetail, icon: Layers },
+    { key: "lighting", label: t.ledLighting, detail: t.lightingDetail, icon: Lightbulb },
+    { key: "trees", label: t.landscaping, detail: t.landscapingDetail, icon: Trees },
+    { key: "gourmet", label: t.gourmetArea, detail: t.gourmetDetail, icon: Lamp }
+  ];
   const selectedModel = useMemo(
     () => models.find((model) => model.id === poolConfig.modelId) || models[0],
     [models, poolConfig.modelId]
@@ -71,14 +72,14 @@ export function Configurator({
     <aside className="config-panel">
       <div className="config-header">
         <div>
-          <span className="eyebrow">Studio 3D</span>
-          <h2>Configurador</h2>
-          <p>Projeto conceitual, materiais e implantacao</p>
+          <span className="eyebrow">{t.studio}</span>
+          <h2>{t.configurator}</h2>
+          <p>{t.configSubtitle}</p>
         </div>
         <Sparkles size={22} />
       </div>
 
-      <div className="config-tabs" role="tablist" aria-label="Etapas do configurador">
+      <div className="config-tabs" role="tablist" aria-label={t.configTabsLabel}>
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -101,7 +102,7 @@ export function Configurator({
         <div className="config-section">
           <div className="section-title">
             <Ruler size={16} />
-            <span>Catalogo tecnico</span>
+            <span>{t.technicalCatalog}</span>
           </div>
 
           <div className="model-list">
@@ -118,9 +119,9 @@ export function Configurator({
                     <span className={`pool-shape ${model.id}`} />
                   </span>
                   <span>
-                    <strong>{model.name}</strong>
+                    <strong>{t.models[model.id] || model.name}</strong>
                     <small>
-                      {model.dimensions.width} x {model.dimensions.length} m / {model.category}
+                      {model.dimensions.width} x {model.dimensions.length} m / {t.categories[model.category] || model.category}
                     </small>
                   </span>
                 </button>
@@ -130,7 +131,7 @@ export function Configurator({
 
           <label className="precision-field">
             <span>
-              Escala do projeto
+              {t.projectScale}
               <strong>{Math.round(poolConfig.scale * 100)}%</strong>
             </span>
             <input
@@ -145,8 +146,8 @@ export function Configurator({
 
           <label className="precision-field">
             <span>
-              Rotacao 2D
-              <strong>{poolConfig.footprint?.rotation || 0} deg</strong>
+              {t.rotation2d}
+              <strong>{poolConfig.footprint?.rotation || 0} {t.degrees}</strong>
             </span>
             <input
               type="range"
@@ -168,10 +169,10 @@ export function Configurator({
 
           {scaledDimensions && (
             <div className="technical-grid">
-              <Metric label="Largura" value={`${scaledDimensions.width.toFixed(1)} m`} />
-              <Metric label="Comprimento" value={`${scaledDimensions.length.toFixed(1)} m`} />
-              <Metric label="Profundidade" value={`${scaledDimensions.depth.toFixed(1)} m`} />
-              <Metric label="Area" value={`${scaledDimensions.area.toFixed(1)} m2`} />
+              <Metric label={t.width} value={formatLength(scaledDimensions.width)} />
+              <Metric label={t.length} value={formatLength(scaledDimensions.length)} />
+              <Metric label={t.depth} value={formatLength(scaledDimensions.depth)} />
+              <Metric label={t.area} value={formatArea(scaledDimensions.area, language)} />
             </div>
           )}
         </div>
@@ -181,7 +182,7 @@ export function Configurator({
         <div className="config-section">
           <div className="section-title">
             <Droplets size={16} />
-            <span>Agua e acabamento</span>
+            <span>{t.waterFinish}</span>
           </div>
 
           <div className="material-grid">
@@ -202,16 +203,16 @@ export function Configurator({
 
           <div className="finish-board">
             <div>
-              <span>Borda</span>
-              <strong>Travertino claro</strong>
+              <span>{t.edge}</span>
+              <strong>{t.travertine}</strong>
             </div>
             <div>
-              <span>Deck</span>
-              <strong>Madeira cumaru</strong>
+              <span>{t.deck}</span>
+              <strong>{t.cumaru}</strong>
             </div>
             <div>
-              <span>Revestimento</span>
-              <strong>{selectedModel?.finish || "Pastilha premium"}</strong>
+              <span>{t.lining}</span>
+              <strong>{t.finishes[selectedModel?.id] || t.premiumTile}</strong>
             </div>
           </div>
         </div>
@@ -221,7 +222,7 @@ export function Configurator({
         <div className="config-section">
           <div className="section-title">
             <Layers size={16} />
-            <span>Componentes externos</span>
+            <span>{t.exteriorComponents}</span>
           </div>
 
           <div className="addon-list">
@@ -250,31 +251,31 @@ export function Configurator({
 
       <div className="site-readout">
         <div>
-          <span>Posicao no lote</span>
+          <span>{t.lotPosition}</span>
           <strong>X {poolConfig.position.x} / Y {poolConfig.position.y}</strong>
         </div>
         <div>
-          <span>Compatibilidade</span>
-          <strong>Conceito aprovado</strong>
+          <span>{t.compatibility}</span>
+          <strong>{t.conceptApproved}</strong>
         </div>
       </div>
 
       <div className="actions pro-actions">
         <button type="button" onClick={onEstimate} disabled={estimating}>
           <CircleDollarSign size={18} />
-          {estimating ? "Calculando" : "Orcamento"}
+          {estimating ? t.estimating : t.estimate}
         </button>
         <button className="secondary" type="button" onClick={onSave} disabled={saving}>
           <Save size={18} />
-          {saving ? "Salvando" : "Salvar"}
+          {saving ? t.saving : t.save}
         </button>
       </div>
 
       {estimate && (
         <div className="estimate-card">
-          <span>Estimativa conceitual</span>
-          <strong>{estimate.total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong>
-          <small>{estimate.model} / {estimate.estimatedAreaM2} m2</small>
+          <span>{t.conceptualEstimate}</span>
+          <strong>{formatCurrency(estimate.total, language)}</strong>
+          <small>{t.models[poolConfig.modelId] || estimate.model} / {formatArea(estimate.estimatedAreaM2, language)}</small>
         </div>
       )}
     </aside>

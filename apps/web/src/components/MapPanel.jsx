@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { useGoogleMaps } from "../hooks/useGoogleMaps";
 
-export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, onSiteImageRemove, onPoolLayoutChange }) {
+export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, onSiteImageRemove, onPoolLayoutChange, t }) {
   const mapElement = useRef(null);
   const realMapRef = useRef(null);
   const mapInstance = useRef(null);
@@ -16,6 +16,7 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
     width: poolConfig.footprint?.width || 190,
     height: poolConfig.footprint?.height || 108
   }));
+  const formattedAddress = geocode?.formattedAddress?.replace("visualizacao demonstrativa", t.demoVisualization);
 
   useEffect(() => {
     if (!siteImage || !realMapRef.current) return;
@@ -119,13 +120,13 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
     <section className="map-panel">
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">Sensoriamento remoto</span>
-          <h2>Imagem aerea e selecao do quintal</h2>
+          <span className="eyebrow">{t.remoteSensing}</span>
+          <h2>{t.aerialImageTitle}</h2>
         </div>
         <div className="map-badges">
           <span>
             <Satellite size={15} />
-            {siteImage ? "Imagem real" : status === "ready" ? "Google Satellite" : "Demo GIS"}
+            {siteImage ? t.realImage : status === "ready" ? t.googleSatellite : t.demoGis}
           </span>
           <span>
             <Layers size={15} />
@@ -137,7 +138,7 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
       <div className="image-uploader">
         <label>
           <ImageUp size={17} />
-          <span>{siteImage ? siteImage.name : "Carregar foto real do quintal ou drone"}</span>
+          <span>{siteImage ? siteImage.name : t.uploadRealImage}</span>
           <input
             type="file"
             accept="image/png,image/jpeg,image/webp"
@@ -145,7 +146,7 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
           />
         </label>
         {siteImage && (
-          <button type="button" onClick={onSiteImageRemove} title="Remover imagem real">
+          <button type="button" onClick={onSiteImageRemove} title={t.removeRealImage}>
             <Trash2 size={16} />
           </button>
         )}
@@ -154,7 +155,7 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
       {siteImage ? (
         <div
           className="demo-map real-image-map"
-          aria-label="Imagem real do terreno"
+          aria-label={t.realTerrainImage}
           role="application"
           ref={realMapRef}
           style={{ backgroundImage: `linear-gradient(rgba(12, 22, 18, 0.12), rgba(12, 22, 18, 0.12)), url(${siteImage.url})` }}
@@ -191,13 +192,13 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
           </Rnd>
           <span className="demo-target">
             <Crosshair size={18} />
-            Arraste e redimensione a piscina
+            {t.dragResizePool}
           </span>
         </div>
       ) : status === "ready" ? (
-        <div className="google-map" ref={mapElement} aria-label="Mapa satelite do terreno" />
+        <div className="google-map" ref={mapElement} aria-label={t.googleSatellite} />
       ) : (
-        <button className="demo-map" type="button" onClick={handleDemoClick} aria-label="Mapa demonstrativo">
+        <button className="demo-map" type="button" onClick={handleDemoClick} aria-label={t.demoMap}>
           <span className="demo-map-grid" />
           <span className="demo-house" />
           <span className="demo-driveway" />
@@ -213,23 +214,23 @@ export function MapPanel({ geocode, poolConfig, siteImage, onSiteImageUpload, on
           />
           <span className="demo-target">
             <Crosshair size={18} />
-            Clique no quintal para reposicionar
+            {t.clickBackyard}
           </span>
         </button>
       )}
 
       <div className="geo-readout">
         <div>
-          <strong>{siteImage ? `Base real: ${siteImage.name}` : geocode?.formattedAddress || "Endereco ainda nao processado"}</strong>
+          <strong>{siteImage ? `${t.realBase}: ${siteImage.name}` : formattedAddress || t.pendingAddress}</strong>
           <span>
             {siteImage
-              ? `Arquivo local / ${(siteImage.size / 1024 / 1024).toFixed(2)} MB / posicao X ${poolConfig.position.x} Y ${poolConfig.position.y}`
-              : `Latitude ${geocode?.coordinates?.lat?.toFixed(6) || "-"} / Longitude ${geocode?.coordinates?.lng?.toFixed(6) || "-"}`}
+              ? `${t.localFile} / ${(siteImage.size / 1024 / 1024).toFixed(2)} MB / ${t.position} X ${poolConfig.position.x} Y ${poolConfig.position.y}`
+              : `${t.latitude} ${geocode?.coordinates?.lat?.toFixed(6) || "-"} / ${t.longitude} ${geocode?.coordinates?.lng?.toFixed(6) || "-"}`}
           </span>
         </div>
         <div>
-          <strong>{siteImage ? "Modo" : "Confianca GIS"}</strong>
-          <span>{siteImage ? "Foto real" : `${Math.round((geocode?.gis?.confidence || 0.68) * 100)}%`}</span>
+          <strong>{siteImage ? t.mode : t.gisConfidence}</strong>
+          <span>{siteImage ? t.realPhoto : `${Math.round((geocode?.gis?.confidence || 0.68) * 100)}%`}</span>
         </div>
       </div>
     </section>

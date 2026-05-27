@@ -6,6 +6,7 @@ import { MapPanel } from "./components/MapPanel";
 import { ThreePoolScene } from "./components/ThreePoolScene";
 import { Toast } from "./components/Toast";
 import { api } from "./lib/api";
+import { translations } from "./lib/i18n";
 
 const defaultConfig = {
   modelId: "lap-modern",
@@ -27,8 +28,10 @@ export default function App() {
   const [geocode, setGeocode] = useState(null);
   const [estimate, setEstimate] = useState(null);
   const [siteImage, setSiteImage] = useState(null);
+  const [language, setLanguage] = useState("pt");
   const [toast, setToast] = useState("");
   const [loading, setLoading] = useState({ address: false, estimate: false, save: false });
+  const t = translations[language];
 
   const selectedModel = useMemo(
     () => models.find((model) => model.id === poolConfig.modelId) || models[0],
@@ -56,7 +59,7 @@ export default function App() {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setToast("Envie uma imagem em formato JPG, PNG ou WebP.");
+      setToast(t.invalidImage);
       return;
     }
 
@@ -68,7 +71,7 @@ export default function App() {
         url: URL.createObjectURL(file)
       };
     });
-    setToast("Imagem real carregada como base do terreno.");
+    setToast(t.imageLoaded);
   }
 
   function handleSiteImageRemove() {
@@ -76,7 +79,7 @@ export default function App() {
       if (current?.url) URL.revokeObjectURL(current.url);
       return null;
     });
-    setToast("Imagem real removida. Mapa demo reativado.");
+    setToast(t.imageRemoved);
   }
 
   async function handleSearch(address) {
@@ -84,7 +87,7 @@ export default function App() {
     try {
       const result = await api.geocode(address);
       setGeocode(result);
-      setToast("Terreno localizado e convertido para coordenadas geograficas.");
+      setToast(t.geocoded);
     } catch (error) {
       setToast(error.message);
     } finally {
@@ -101,7 +104,7 @@ export default function App() {
         remoteSensing: { slopeRisk: "low" }
       });
       setEstimate(result);
-      setToast("Orcamento preliminar gerado.");
+      setToast(t.estimateReady);
     } catch (error) {
       setToast(error.message);
     } finally {
@@ -111,14 +114,14 @@ export default function App() {
 
   async function handleSave() {
     if (!geocode) {
-      setToast("Busque um endereco antes de salvar.");
+      setToast(t.searchBeforeSave);
       return;
     }
 
     setLoading((current) => ({ ...current, save: true }));
     try {
       await api.saveProject({
-        name: "Conceito residencial com piscina",
+        name: t.projectName,
         address: geocode.formattedAddress,
         coordinates: geocode.coordinates,
         poolModelId: poolConfig.modelId,
@@ -130,7 +133,7 @@ export default function App() {
           selectedBackyardPoint: poolConfig.position
         }
       });
-      setToast("Projeto salvo no backend demo.");
+      setToast(t.projectSaved);
     } catch (error) {
       setToast(error.message);
     } finally {
@@ -145,28 +148,34 @@ export default function App() {
           <span className="brand-mark">PS</span>
           <div>
             <strong>PoolSight Remote 3D</strong>
-            <span>Sensoriamento remoto para piscinas residenciais</span>
+            <span>{t.brandSubtitle}</span>
           </div>
         </div>
-        <nav aria-label="Modulos do sistema">
-          <a href="#mapa">Mapa</a>
-          <a href="#studio">3D</a>
-          <a href="#docs">SaaS</a>
+        <nav aria-label={t.navLabel}>
+          <a href="#mapa">{t.navMap}</a>
+          <a href="#studio">{t.nav3d}</a>
+          <a href="#docs">{t.navSaas}</a>
         </nav>
+        <div className="language-switcher" aria-label={t.language}>
+          <button className={language === "pt" ? "active" : ""} type="button" onClick={() => setLanguage("pt")}>
+            PT
+          </button>
+          <button className={language === "en" ? "active" : ""} type="button" onClick={() => setLanguage("en")}>
+            EN
+          </button>
+        </div>
       </header>
 
       <section className="hero-band">
         <div className="hero-copy">
-          <span className="eyebrow">Arquitetura, GIS e visualizacao</span>
-          <h1>Pre-visualizacao 3D de piscinas usando imagens aereas</h1>
-          <p>
-            Localize o endereco do cliente, selecione a area do quintal e apresente uma proposta visual antes da visita tecnica.
-          </p>
+          <span className="eyebrow">{t.heroEyebrow}</span>
+          <h1>{t.heroTitle}</h1>
+          <p>{t.heroText}</p>
         </div>
-        <AddressSearch onSearch={handleSearch} loading={loading.address} />
+        <AddressSearch onSearch={handleSearch} loading={loading.address} t={t} />
       </section>
 
-      <KpiStrip geocode={geocode} />
+      <KpiStrip geocode={geocode} t={t} />
 
       <section className="workspace" id="mapa">
         <MapPanel
@@ -175,6 +184,7 @@ export default function App() {
           siteImage={siteImage}
           onSiteImageUpload={handleSiteImageUpload}
           onSiteImageRemove={handleSiteImageRemove}
+          t={t}
           onPoolLayoutChange={(layout) =>
             setPoolConfig((current) => ({
               ...current,
@@ -187,7 +197,7 @@ export default function App() {
           }
         />
         <div className="studio-column" id="studio">
-          <ThreePoolScene model={selectedModel} poolConfig={poolConfig} />
+          <ThreePoolScene model={selectedModel} poolConfig={poolConfig} t={t} />
           <Configurator
             models={models}
             poolConfig={poolConfig}
@@ -197,18 +207,18 @@ export default function App() {
             estimate={estimate}
             estimating={loading.estimate}
             saving={loading.save}
+            language={language}
+            t={t}
           />
         </div>
       </section>
 
       <section className="architecture-strip" id="docs">
         <div>
-          <span className="eyebrow">Roadmap tecnico</span>
-          <h2>MVP pronto para evoluir para SaaS</h2>
+          <span className="eyebrow">{t.roadmapEyebrow}</span>
+          <h2>{t.roadmapTitle}</h2>
         </div>
-        <p>
-          Backend modular, banco PostgreSQL planejado, autenticacao por token, APIs Google Maps, camada GIS e motor 3D isolado para futuras rotinas de IA, drone e realidade aumentada.
-        </p>
+        <p>{t.roadmapText}</p>
       </section>
 
       <Toast message={toast} />

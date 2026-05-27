@@ -47,6 +47,7 @@ Sem chave, o sistema roda em modo demonstrativo com mapa GIS sintetico.
 - Orcamento conceitual
 - Salvamento de projeto no backend
 - Interface responsiva com linguagem visual de arquitetura, engenharia e real estate
+- Seletor de idioma em portugues e ingles, com especificacoes e medidas traduzidas
 
 ## Estrutura
 
