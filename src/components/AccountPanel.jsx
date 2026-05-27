@@ -1,5 +1,5 @@
 import { Lock, LogOut, ShieldCheck, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function AccountPanel({
   t,
@@ -18,6 +18,12 @@ export function AccountPanel({
     email: "",
     password: ""
   });
+  const nameInputRef = useRef(null);
+
+  function selectMode(nextMode) {
+    setMode(nextMode);
+    window.setTimeout(() => nameInputRef.current?.focus(), 0);
+  }
 
   function submit(event) {
     event.preventDefault();
@@ -81,19 +87,28 @@ export function AccountPanel({
       ) : (
         <form className="auth-form" onSubmit={submit}>
           <div className="auth-toggle">
-            <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>
+            <button className={mode === "login" ? "active" : ""} type="button" onClick={() => selectMode("login")}>
               <Lock size={15} />
               {t.haveAccount}
             </button>
-            <button className={mode === "register" ? "active" : ""} type="button" onClick={() => setMode("register")}>
+            <button className={mode === "register" ? "active" : ""} type="button" onClick={() => selectMode("register")}>
               <UserPlus size={15} />
               {t.newAccount}
             </button>
           </div>
+          <div className="auth-mode-note">
+            <strong>{mode === "login" ? t.loginModeTitle : t.registerModeTitle}</strong>
+            <span>{mode === "login" ? t.loginModeHelp : t.registerModeHelp}</span>
+          </div>
 
           <label>
             {t.name}
-            <input required value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
+            <input
+              ref={nameInputRef}
+              required
+              value={form.name}
+              onChange={(event) => setForm({ ...form, name: event.target.value })}
+            />
           </label>
           <label>
             {t.email}
