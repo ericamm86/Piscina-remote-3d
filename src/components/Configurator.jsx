@@ -59,7 +59,7 @@ export function Configurator({
   language,
   t
 }) {
-  const [activeTab, setActiveTab] = useState("design");
+  const [activeTab, setActiveTab] = useState("materials");
   const tabs = [
     { id: "design", label: t.tabDesign, icon: Grid2X2 },
     { id: "materials", label: t.tabMaterials, icon: Palette },
