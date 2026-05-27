@@ -166,6 +166,7 @@ Backend:
 ## Documentacao
 
 - [Arquitetura tecnica](docs/ARCHITECTURE.md)
+- [PRD do produto](docs/PRD.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Sensoriamento remoto e GIS](docs/REMOTE-SENSING.md)
 - [Subagents do projeto](docs/SUBAGENTS.md)
