@@ -224,6 +224,95 @@ Critérios de aceite:
 
 ## 10. Arquitetura
 
+## 10.1. Tecnologias utilizadas
+
+Esta secao consolida todas as tecnologias, conceitos e plataformas usados ou preparados no projeto.
+
+### Frontend
+
+- React: biblioteca principal para criacao da interface web.
+- Vite: ferramenta de build e desenvolvimento rapido do frontend.
+- JavaScript moderno: linguagem principal da aplicacao no navegador.
+- HTML5: estrutura base da aplicacao.
+- CSS3: estilos visuais e responsividade.
+- TailwindCSS/PostCSS: organizacao e processamento de estilos.
+- Lucide React: biblioteca de icones utilizada na interface.
+- React RND: suporte para movimentar e redimensionar elementos visuais, como a piscina sobre o terreno.
+
+### Backend
+
+- Node.js: ambiente de execucao do backend.
+- Express: framework para criacao da API REST.
+- API REST: padrao de comunicacao entre frontend e backend.
+- Middleware: validacao, autenticacao, logs e tratamento de erros.
+- Morgan: logs basicos de requisicoes HTTP.
+- Helmet: configuracoes basicas de seguranca HTTP.
+- Zod: validacao de dados recebidos pela API.
+
+### Autenticacao e seguranca
+
+- JWT: geracao de token de autenticacao.
+- Bearer Token: envio do token nas rotas protegidas.
+- bcryptjs: hash seguro de senhas.
+- CORS: controle de origens permitidas para acesso a API.
+- Variaveis de ambiente: protecao de chaves, secrets e configuracoes sensiveis.
+
+### Banco de dados
+
+- PostgreSQL: banco relacional recomendado para persistencia principal.
+- Neon Database: plataforma PostgreSQL serverless preparada para producao.
+- SQL: linguagem usada para schema e seed inicial.
+- Modo memory-fallback: persistencia temporaria em memoria para ambiente sem banco configurado.
+
+### Mapas, GIS e sensoriamento remoto
+
+- Google Maps Platform: integracao planejada para mapas e imagens de satelite.
+- Geocoding API: conversao de endereco em latitude e longitude.
+- Places API: suporte futuro para busca inteligente de enderecos.
+- Maps JavaScript API: exibicao de mapa interativo no frontend.
+- Coordenadas geograficas: uso de latitude e longitude para localizacao do terreno.
+- GIS/SIG: conceito de sistema de informacao geografica aplicado a lotes, terrenos e camadas.
+- Imagens aereas: base visual para analise do quintal.
+- Imagens de satelite: base remota para visualizacao do terreno.
+- Upload de imagem real: suporte para foto aerea, drone, print de mapa ou imagem do quintal.
+
+### Renderizacao 3D e experiencia imersiva
+
+- Three.js: motor 3D principal utilizado no navegador.
+- WebGL: tecnologia grafica usada indiretamente pelo Three.js.
+- Render 3D normal: visualizacao padrao da piscina e area externa.
+- Visualizacao anaglifa: modo experimental para oculos vermelho/azul.
+- WebXR/VR: base para entrada futura em realidade virtual.
+- Modelagem parametrica simples: alteracao de formato, tamanho e cor da piscina.
+
+### Tecnologias futuras planejadas
+
+- Inteligencia artificial: sugestao automatica de melhor local para a piscina.
+- Visao computacional: deteccao de areas livres, obstaculos e quintal.
+- Fotogrametria: reconstrucao 3D com imagens de drone.
+- Drones: captura de imagens aereas reais do terreno.
+- LiDAR: nuvem de pontos para medicao precisa.
+- Realidade aumentada: visualizacao da piscina no ambiente fisico.
+- Cesium: possibilidade futura para mapas 3D estilo Google Earth.
+- QGIS/ArcGIS: apoio conceitual para analises GIS avancadas.
+
+### Deploy e infraestrutura
+
+- Vercel: deploy do frontend e da API serverless.
+- Serverless Functions: execucao da API no ambiente Vercel.
+- GitHub: versionamento e hospedagem do repositorio.
+- Git: controle de versao.
+- npm Workspaces: organizacao inicial em monorepo.
+- Variaveis de ambiente no Vercel: configuracao de `JWT_SECRET`, `DATABASE_URL`, `CLIENT_ORIGIN` e chaves externas.
+
+### Documentacao e organizacao
+
+- README: instrucoes principais do projeto.
+- PRD: documento de requisitos de produto.
+- Roadmap: planejamento de evolucao.
+- Documentacao de arquitetura: explicacao tecnica da estrutura.
+- `.env.example`: referencia das variaveis necessarias.
+
 ### Frontend
 
 - React.
@@ -463,4 +552,3 @@ Uma versao e considerada pronta quando:
 - Fluxo principal de criacao/configuracao e acessivel.
 - Interface nao quebra em telas pequenas.
 - Documentacao basica esta atualizada.
-
