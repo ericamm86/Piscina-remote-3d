@@ -14,14 +14,13 @@ import {
 import { useMemo, useState } from "react";
 import { formatArea, formatCurrency, formatLength } from "../lib/i18n";
 
-const colors = [
-  { value: "#1da9c9", name: "Lagoon" },
-  { value: "#18b79a", name: "Aqua" },
-  { value: "#2f79d6", name: "Deep" },
-  { value: "#49c5f6", name: "Crystal" }
-];
-
 const materialOptions = {
+  water: [
+    { id: "#1da9c9", labelKey: "lagoonWater", detailKey: "lagoonWaterDetail", color: "#1da9c9" },
+    { id: "#18b79a", labelKey: "aquaWater", detailKey: "aquaWaterDetail", color: "#18b79a" },
+    { id: "#2f79d6", labelKey: "deepWater", detailKey: "deepWaterDetail", color: "#2f79d6" },
+    { id: "#49c5f6", labelKey: "crystalWater", detailKey: "crystalWaterDetail", color: "#49c5f6" }
+  ],
   interior: [
     { id: "glass-mosaic", labelKey: "glassMosaic", detailKey: "glassMosaicDetail", color: "#64d4e7" },
     { id: "porcelain", labelKey: "porcelainTile", detailKey: "porcelainTileDetail", color: "#dfe8e6" },
@@ -243,28 +242,6 @@ export function Configurator({
             <span>{t.waterFinish}</span>
           </div>
 
-          <div className="material-grid">
-            {colors.map((color) => (
-              <button
-                className={poolConfig.color === color.value ? "material-swatch active" : "material-swatch"}
-                key={color.value}
-                type="button"
-                title={color.name}
-                onClick={() => onChange({ ...poolConfig, color: color.value })}
-                onPointerUp={(event) => {
-                  if (event.pointerType !== "mouse") {
-                    event.preventDefault();
-                    onChange({ ...poolConfig, color: color.value });
-                  }
-                }}
-              >
-                <span style={{ backgroundColor: color.value }} />
-                <strong>{color.name}</strong>
-                <small>{color.value}</small>
-              </button>
-            ))}
-          </div>
-
           <div className="finish-board">
             <div>
               <span>{t.edge}</span>
@@ -283,6 +260,15 @@ export function Configurator({
               <strong>{t[materialOptions.lighting.find((option) => option.id === selectedMaterials.lighting)?.labelKey] || t.warmLed}</strong>
             </div>
           </div>
+
+          <MaterialPicker
+            title={t.waterColor}
+            detail={t.waterColorDetail}
+            options={materialOptions.water}
+            value={poolConfig.color}
+            onSelect={(value) => onChange({ ...poolConfig, color: value })}
+            t={t}
+          />
 
           <MaterialPicker
             title={t.interiorFinish}
