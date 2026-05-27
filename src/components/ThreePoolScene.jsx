@@ -5,6 +5,26 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { AnaglyphEffect } from "three/examples/jsm/effects/AnaglyphEffect.js";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
+const materialColors = {
+  coping: {
+    travertine: "#d6be92",
+    "white-marble": "#f3efe7",
+    "brushed-concrete": "#b8b4aa",
+    "dark-stone": "#48514d"
+  },
+  deck: {
+    cumaru: "#a66d3f",
+    "porcelain-deck": "#d9d0bd",
+    "natural-stone": "#b6ab95",
+    "composite-wood": "#7b5b45"
+  },
+  lighting: {
+    "warm-led": "#ffd28a",
+    "cool-led": "#bfeeff",
+    "rgb-led": "#b077ff"
+  }
+};
+
 export function ThreePoolScene({ model, poolConfig, t }) {
   const hostRef = useRef(null);
   const vrSlotRef = useRef(null);
@@ -203,6 +223,12 @@ function buildPoolScene(state, model, config) {
   const dimensions = model.dimensions || { width: 4, length: 8, depth: 1.35 };
   const width = dimensions.width * config.scale;
   const length = dimensions.length * config.scale;
+  const selectedMaterials = {
+    coping: "travertine",
+    deck: "cumaru",
+    lighting: "warm-led",
+    ...config.materials
+  };
   const x = ((config.position.x - 50) / 50) * 3.2;
   const z = ((config.position.y - 50) / 50) * 2.8;
   poolGroup.position.set(x, 0.03, z);
@@ -211,7 +237,7 @@ function buildPoolScene(state, model, config) {
   if (config.features.deck) {
     const deck = new THREE.Mesh(
       new THREE.BoxGeometry(width + 2.2, 0.18, length + 2.2),
-      new THREE.MeshStandardMaterial({ color: "#c79a63", roughness: 0.7 })
+      new THREE.MeshStandardMaterial({ color: materialColors.deck[selectedMaterials.deck] || "#a66d3f", roughness: 0.7 })
     );
     deck.position.y = 0.03;
     deck.receiveShadow = true;
@@ -219,7 +245,7 @@ function buildPoolScene(state, model, config) {
     poolGroup.add(deck);
   }
 
-  const shell = createShell(model.id, width, length);
+  const shell = createShell(model.id, width, length, materialColors.coping[selectedMaterials.coping] || "#d6be92");
   shell.position.y = 0.16;
   shell.traverse((object) => {
     object.castShadow = true;
@@ -233,7 +259,7 @@ function buildPoolScene(state, model, config) {
   state.water = water;
 
   if (config.features.lighting) {
-    addPoolLights(poolGroup, width, length, config.color);
+    addPoolLights(poolGroup, width, length, materialColors.lighting[selectedMaterials.lighting] || config.color);
   }
 
   if (config.features.trees) {
@@ -248,8 +274,8 @@ function buildPoolScene(state, model, config) {
   state.poolGroup = poolGroup;
 }
 
-function createShell(modelId, width, length) {
-  const material = new THREE.MeshStandardMaterial({ color: "#f4efe4", roughness: 0.52, metalness: 0.05 });
+function createShell(modelId, width, length, color) {
+  const material = new THREE.MeshStandardMaterial({ color, roughness: 0.52, metalness: 0.05 });
 
   if (modelId === "family-freeform") {
     const shape = new THREE.Shape();

@@ -21,6 +21,32 @@ const colors = [
   { value: "#49c5f6", name: "Crystal" }
 ];
 
+const materialOptions = {
+  interior: [
+    { id: "glass-mosaic", labelKey: "glassMosaic", detailKey: "glassMosaicDetail", color: "#64d4e7" },
+    { id: "porcelain", labelKey: "porcelainTile", detailKey: "porcelainTileDetail", color: "#dfe8e6" },
+    { id: "blue-vinyl", labelKey: "blueVinyl", detailKey: "blueVinylDetail", color: "#2f79d6" },
+    { id: "stone-texture", labelKey: "stoneTexture", detailKey: "stoneTextureDetail", color: "#93a69d" }
+  ],
+  coping: [
+    { id: "travertine", labelKey: "travertine", detailKey: "travertineDetail", color: "#d6be92" },
+    { id: "white-marble", labelKey: "whiteMarble", detailKey: "whiteMarbleDetail", color: "#f3efe7" },
+    { id: "brushed-concrete", labelKey: "brushedConcrete", detailKey: "brushedConcreteDetail", color: "#b8b4aa" },
+    { id: "dark-stone", labelKey: "darkStone", detailKey: "darkStoneDetail", color: "#48514d" }
+  ],
+  deck: [
+    { id: "cumaru", labelKey: "cumaru", detailKey: "cumaruDetail", color: "#a66d3f" },
+    { id: "porcelain-deck", labelKey: "porcelainDeck", detailKey: "porcelainDeckDetail", color: "#d9d0bd" },
+    { id: "natural-stone", labelKey: "naturalStone", detailKey: "naturalStoneDetail", color: "#b6ab95" },
+    { id: "composite-wood", labelKey: "compositeWood", detailKey: "compositeWoodDetail", color: "#7b5b45" }
+  ],
+  lighting: [
+    { id: "warm-led", labelKey: "warmLed", detailKey: "warmLedDetail", color: "#ffd28a" },
+    { id: "cool-led", labelKey: "coolLed", detailKey: "coolLedDetail", color: "#bfeeff" },
+    { id: "rgb-led", labelKey: "rgbLed", detailKey: "rgbLedDetail", color: "#b077ff" }
+  ]
+};
+
 export function Configurator({
   models,
   poolConfig,
@@ -49,6 +75,13 @@ export function Configurator({
     () => models.find((model) => model.id === poolConfig.modelId) || models[0],
     [models, poolConfig.modelId]
   );
+  const selectedMaterials = {
+    interior: "glass-mosaic",
+    coping: "travertine",
+    deck: "cumaru",
+    lighting: "warm-led",
+    ...poolConfig.materials
+  };
   const scaledDimensions = selectedModel
     ? {
         width: selectedModel.dimensions.width * poolConfig.scale,
@@ -64,6 +97,16 @@ export function Configurator({
       features: {
         ...poolConfig.features,
         [key]: !poolConfig.features[key]
+      }
+    });
+  }
+
+  function updateMaterial(category, value) {
+    onChange({
+      ...poolConfig,
+      materials: {
+        ...selectedMaterials,
+        [category]: value
       }
     });
   }
@@ -204,17 +247,57 @@ export function Configurator({
           <div className="finish-board">
             <div>
               <span>{t.edge}</span>
-              <strong>{t.travertine}</strong>
+              <strong>{t[materialOptions.coping.find((option) => option.id === selectedMaterials.coping)?.labelKey] || t.travertine}</strong>
             </div>
             <div>
               <span>{t.deck}</span>
-              <strong>{t.cumaru}</strong>
+              <strong>{t[materialOptions.deck.find((option) => option.id === selectedMaterials.deck)?.labelKey] || t.cumaru}</strong>
             </div>
             <div>
               <span>{t.lining}</span>
-              <strong>{t.finishes[selectedModel?.id] || t.premiumTile}</strong>
+              <strong>{t[materialOptions.interior.find((option) => option.id === selectedMaterials.interior)?.labelKey] || t.premiumTile}</strong>
+            </div>
+            <div>
+              <span>{t.poolLighting}</span>
+              <strong>{t[materialOptions.lighting.find((option) => option.id === selectedMaterials.lighting)?.labelKey] || t.warmLed}</strong>
             </div>
           </div>
+
+          <MaterialPicker
+            title={t.interiorFinish}
+            detail={t.interiorFinishDetail}
+            options={materialOptions.interior}
+            value={selectedMaterials.interior}
+            onSelect={(value) => updateMaterial("interior", value)}
+            t={t}
+          />
+
+          <MaterialPicker
+            title={t.copingMaterial}
+            detail={t.copingMaterialDetail}
+            options={materialOptions.coping}
+            value={selectedMaterials.coping}
+            onSelect={(value) => updateMaterial("coping", value)}
+            t={t}
+          />
+
+          <MaterialPicker
+            title={t.deckMaterial}
+            detail={t.deckMaterialDetail}
+            options={materialOptions.deck}
+            value={selectedMaterials.deck}
+            onSelect={(value) => updateMaterial("deck", value)}
+            t={t}
+          />
+
+          <MaterialPicker
+            title={t.lightingMaterial}
+            detail={t.lightingMaterialDetail}
+            options={materialOptions.lighting}
+            value={selectedMaterials.lighting}
+            onSelect={(value) => updateMaterial("lighting", value)}
+            t={t}
+          />
         </div>
       )}
 
@@ -287,6 +370,31 @@ function Metric({ label, value }) {
     <div>
       <span>{label}</span>
       <strong>{value}</strong>
+    </div>
+  );
+}
+
+function MaterialPicker({ title, detail, options, value, onSelect, t }) {
+  return (
+    <div className="material-category">
+      <div className="material-category-title">
+        <strong>{title}</strong>
+        <span>{detail}</span>
+      </div>
+      <div className="material-grid compact">
+        {options.map((option) => (
+          <button
+            className={value === option.id ? "material-swatch active" : "material-swatch"}
+            key={option.id}
+            type="button"
+            onClick={() => onSelect(option.id)}
+          >
+            <span style={{ backgroundColor: option.color }} />
+            <strong>{t[option.labelKey]}</strong>
+            <small>{t[option.detailKey]}</small>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

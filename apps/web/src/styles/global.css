@@ -978,6 +978,10 @@ button {
   gap: 8px;
 }
 
+.material-grid.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .material-swatch {
   min-height: 84px;
   padding: 9px;
@@ -990,6 +994,28 @@ button {
   margin-bottom: 9px;
   border: 2px solid rgba(255, 255, 255, 0.86);
   border-radius: 7px;
+}
+
+.material-category {
+  display: grid;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.material-category-title {
+  display: grid;
+  gap: 2px;
+}
+
+.material-category-title strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.material-category-title span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
 }
 
 .finish-board,

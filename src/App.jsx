@@ -15,6 +15,12 @@ const defaultConfig = {
   scale: 1,
   position: { x: 62, y: 66 },
   footprint: { width: 190, height: 108, rotation: -7 },
+  materials: {
+    interior: "glass-mosaic",
+    coping: "travertine",
+    deck: "cumaru",
+    lighting: "warm-led"
+  },
   features: {
     deck: true,
     lighting: true,
