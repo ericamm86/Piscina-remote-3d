@@ -58,6 +58,7 @@ piscina-remote-3d/
 - Renderizacao 3D com Three.js
 - Modo WebXR/VR e anaglifo
 - Seletor de idioma portugues/ingles com medidas e especificacoes traduzidas
+- Responsividade validada para desktop, tablet e celulares pequenos
 
 ## Instalar
 

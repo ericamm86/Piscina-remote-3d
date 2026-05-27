@@ -1228,6 +1228,35 @@ button {
     padding-bottom: 14px;
   }
 
+  .topbar > div:first-child {
+    align-items: flex-start;
+  }
+
+  .topbar nav {
+    width: 100%;
+    margin-left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .topbar a {
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 7px 6px;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .language-switcher {
+    width: 100%;
+  }
+
+  .language-switcher button {
+    flex: 1;
+  }
+
   .hero-band {
     min-height: auto;
     padding: 28px 0 18px;
@@ -1248,6 +1277,11 @@ button {
 
   .kpi-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kpi {
+    min-height: 76px;
+    padding: 13px;
   }
 
   .map-panel,
@@ -1287,5 +1321,73 @@ button {
   .feature-grid,
   .swatches {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .account-panel,
+  .architecture-strip,
+  .map-panel,
+  .config-panel {
+    padding: 14px;
+  }
+
+  .session-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .session-card button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .app-shell {
+    width: min(100% - 16px, 1500px);
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    margin-right: 10px;
+  }
+
+  .topbar nav {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.85rem, 13vw, 2.65rem);
+  }
+
+  .hero-copy p {
+    font-size: 0.98rem;
+  }
+
+  .kpi-strip,
+  .technical-grid,
+  .site-readout,
+  .material-grid,
+  .feature-grid,
+  .swatches {
+    grid-template-columns: 1fr;
+  }
+
+  .config-tabs,
+  .auth-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  .model-card {
+    grid-template-columns: 58px 1fr;
+  }
+
+  .pool-ruler.vertical {
+    right: -42px;
+  }
+
+  .toast {
+    right: 8px;
+    bottom: 8px;
+    max-width: calc(100vw - 16px);
   }
 }
